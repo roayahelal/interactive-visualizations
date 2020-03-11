@@ -1,86 +1,94 @@
-function buildMetadata(sample) {
+    function buildMetadata(sample) {
 
-  // @TODO: Complete the following function that builds the metadata panel
+    // @TODO: Complete the following function that builds the metadata panel
+  
+    // Use `d3.json` to fetch the metadata for a sample
+    const url = "samples.json";
+    d3.json(url).then(function(importedData) {
+      //  console.log(importedData);
+      data = importedData;
 
-  // Use `d3.json` to fetch the metadata for a sample
-  const url = "http://0.0.0.0:8000/Homework/interactive-visualizations/Instructions/StarterCode//samples.json";
-
-  // Fetch the JSON data and console log it
-  d3.json(url).then(function(importedData) {
-    // console.log(importedData);
-    data = importedData;
+      // Use d3 to select the panel with id of `#sample-metadata`
+      var sampleMetadata = d3.select("#sample-metadata");
+      // // Use `.html("") to clear any existing metadata
+      sampleMetadata.html("");
+      // Use `Object.entries` to add each key and value pair to the panel
+      // Hint: Inside the loop, you will need to use d3 to append new
+      // tags for each key-value in the metadata.
+      var metadataRaw = data.metadata;
+      filtered = metadataRaw.filter(x => x.id == sample);
+    
+      filtered.forEach(function(x) {
+        var row = sampleMetadata.append("lu");
+        Object.entries(x).forEach(function([key, value]) {
+        // Append a cell to the row for each value
+        var cell = row.append("li");
+        cell.text(`${key}: ${value}`);
+        if (key = "wfreq") {
+          var wfreq = value;
+          var dataForGuage = [
+            {
+              domain: { x: [0, 1], y: [0, 1] },
+              value: value,
+              title: { text: "World Frequency" },
+              type: "indicator",
+              mode: "gauge+number",
+              delta: { reference: 10 },
+              gauge: { axis: { range: [null, 10] } }
+            }
+          ];
+          
+          var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+          console.log(wfreq);
+          Plotly.newPlot('gauge', dataForGuage, layout);
+        }
+         // BONUS: Build the Gauge Chart
+        
+        });});
+        });
+        };
+  
+  function buildCharts(sample) {
     
   
-    // Use d3 to select the panel with id of `#sample-metadata`
-    var sampleMetadata = d3.select("#sample-metadata");
-    // Use `.html("") to clear any existing metadata
-    sampleMetadata.html("");
-
-    var metadataRaw = data.metadata
-
-    // console.log(metadataRaw)
-    // Use `Object.entries` to add each key and value pair to the panel
-
-
-    filtered = metadataRaw.filter(x => x.id == sample)
+    // @TODO: Use `d3.json` to fetch the sample data for the plots
     
-    filtered.forEach(function(x) {
-      var row = sampleMetadata.append("lu");
-      Object.entries(x).forEach(function([key, value]) {
-      // Append a cell to the row for each value
-      var cell = row.append("li");
-      cell.text(`${key}: ${value}`);
-      });
-      });
-
-    
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
-
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
-  });
+      //  console.log(importedData);
+      
+  
+      // @TODO: Build a Bubble Chart using the sample data
+      
+  
+      // @TODO: Build a Pie Chart
+      // HINT: You will need to use slice() to grab the top 10 sample_values,
+      // otu_ids, and labels (10 each).
   }
-function buildCharts(sample) {
-
-  // @TODO: Use `d3.json` to fetch the sample data for the plots
-  d3.json(url).then(function(importedData) {
-    // console.log(importedData);
-    data = importedData;
-    // @TODO: Build a Bubble Chart using the sample data
-
-    // @TODO: Build a Pie Chart
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
-    // otu_ids, and labels (10 each).
-}
-
-function init() {
-  // Grab a reference to the dropdown select element
-  var selector = d3.select("#selDataset");
-
-  // Use the list of sample names to populate the select options
-  d3.json("samples.json").then((data) => {
-    var sampleNames = data.names;
-
-    sampleNames.forEach((sample) => {
-      selector
-        .append("option")
-        .text(sample)
-        .property("value", sample);
+  
+  function init() {
+    // Grab a reference to the dropdown select element
+    var selector = d3.select("#selDataset");
+  
+    // Use the list of sample names to populate the select options
+    d3.json("samples.json").then((data) => {
+      var sampleNames = data.names;
+  
+      sampleNames.forEach((sample) => {
+        selector
+          .append("option")
+          .text(sample)
+          .property("value", sample);
+      });
+  
+      // Use the first sample from the list to build the initial plots
+      var firstSample = sampleNames[0];
+      buildCharts(firstSample);
+      buildMetadata(firstSample);
     });
-
-    // Use the first sample from the list to build the initial plots
-    var firstSample = sampleNames[0];
-    buildCharts(firstSample);
-    buildMetadata(firstSample);
-  });
-}
-
-function optionChanged(newSample) {
-  // Fetch new data each time a new sample is selected
-  buildCharts(newSample);
-  buildMetadata(newSample);
-}
-
-// Initialize the dashboard
-init();
+  }
+  
+  function optionChanged(newSample) {
+    // Fetch new data each time a new sample is selected
+    buildCharts(newSample);
+    buildMetadata(newSample);
+  }
+  init();

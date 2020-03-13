@@ -30,7 +30,7 @@
             {
               domain: { x: [0, 1], y: [0, 1] },
               value: value,
-              title: { text: "World Frequency" },
+              title: { text: "Belly button wash scrubs per week" },
               type: "indicator",
               mode: "gauge+number",
               delta: { reference: 10 },
@@ -98,7 +98,7 @@
       }];
       
       var layout = {
-        height: 600,
+        height: 500,
         width: 500
       };
       

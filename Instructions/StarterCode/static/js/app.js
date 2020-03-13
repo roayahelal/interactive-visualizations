@@ -52,18 +52,43 @@
     
   
     // @TODO: Use `d3.json` to fetch the sample data for the plots
-    
+    const url = "samples.json";
+    d3.json(url).then(function(importedData) {
       //  console.log(importedData);
-      
+      data = importedData;
   
       // @TODO: Build a Bubble Chart using the sample data
-      
-  
+      var sampledataRaw = data.samples;
+      // console.log(sampledataRaw);
+      filtered = sampledataRaw.filter(x => x.id == sample);
+      console.log(filtered)
+      console.log(filtered[0]["otu_ids"])
+              var trace1 = {
+                x: filtered[0]["otu_ids"],
+                y: filtered[0]["sample_values"],
+                text: filtered[0]["otu_labels"],
+                mode: 'markers',
+                marker: {
+                  size: filtered[0]["sample_values"]
+                }
+              };
+              
+              var dataForBubble = [trace1];
+              
+              var layout = {
+                showlegend: false,
+                height: 600,
+                width: 600
+              };
+              
+              
+          Plotly.newPlot("bubble", dataForBubble, layout);
+        // });
       // @TODO: Build a Pie Chart
       // HINT: You will need to use slice() to grab the top 10 sample_values,
       // otu_ids, and labels (10 each).
+  });
   }
-  
   function init() {
     // Grab a reference to the dropdown select element
     var selector = d3.select("#selDataset");

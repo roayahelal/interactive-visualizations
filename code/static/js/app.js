@@ -38,7 +38,7 @@
             }
           ];
           
-          var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+          var layout = { width: 400, height: 400, margin: { t: 0, b: 0 } };
           console.log(wfreq);
           Plotly.newPlot('gauge', dataForGuage, layout);
         }
@@ -69,6 +69,7 @@
                 text: filtered[0]["otu_labels"],
                 mode: 'markers',
                 marker: {
+                  color: filtered[0]["otu_ids"],
                   size: filtered[0]["sample_values"]
                 }
               };
@@ -78,7 +79,7 @@
               var layout = {
                 showlegend: false,
                 height: 600,
-                width: 600
+                width: 1200
               };
               
               
@@ -87,6 +88,22 @@
       // @TODO: Build a Pie Chart
       // HINT: You will need to use slice() to grab the top 10 sample_values,
       // otu_ids, and labels (10 each).
+      var Piedata = [{
+        values: filtered[0]["sample_values"].slice(0,10) ,
+        labels: filtered[0]["otu_ids"],
+        type: 'pie',
+        hovertext: filtered[0]["otu_labels"],
+        hoverinfo: 'hovertext'
+        
+      }];
+      
+      var layout = {
+        height: 600,
+        width: 500
+      };
+      
+      Plotly.newPlot('pie', Piedata, layout);
+      
   });
   }
   function init() {
